@@ -1,0 +1,34 @@
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment / Secrets
+.env
+
+# Large synthesized data files (generated locally, not pushed)
+data/employees_synthesized.csv
+data/employees_historical.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Build
+*.egg-info/
+dist/
+build/
+
+# Streamlit
+.streamlit/secrets.toml
