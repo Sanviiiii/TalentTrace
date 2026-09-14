@@ -13,7 +13,7 @@ def _try_load(fn):
 
 def render():
     st.title("📊 Analytics Dashboard")
-    st.markdown("*Powered by `hr_olap` Star Schema — Window Functions + CTEs*")
+    st.markdown("Powered by hr_olap Star Schema — Window Functions + CTEs")
     st.markdown("---")
 
     mgr = AnalyticsManager()
@@ -38,12 +38,17 @@ def render():
 
     # ── YoY Performance ───────────────────────────────────────
     st.subheader("📈 Year-over-Year Performance Trends")
-    st.caption("SQL: `LAG()` window function over `review_year PARTITION BY department_name`")
+    st.caption("SQL: LAG() window function over review_year PARTITION BY department_name")
     yoy, err = _try_load(mgr.get_yoy_performance)
     if err:
         st.info(f"YoY data not available yet: {err}")
     elif yoy:
         df_yoy = pd.DataFrame(yoy)
+        
+        # Cast SQL Decimals to floats
+        df_yoy["avg_rating"] = df_yoy["avg_rating"].astype(float)
+        df_yoy["avg_satisfaction"] = df_yoy["avg_satisfaction"].astype(float)
+
         fig = px.line(df_yoy, x="review_year", y="avg_rating",
                       color="department_name", markers=True,
                       title="Average Performance Rating by Year & Department",
@@ -72,7 +77,7 @@ def render():
 
     # ── Top Performers ────────────────────────────────────────
     st.subheader("🏆 Top Performers by Department")
-    st.caption("SQL: `DENSE_RANK() OVER (PARTITION BY department_name ORDER BY avg_rating DESC)`")
+    st.caption("SQL: DENSE_RANK() OVER (PARTITION BY department_name ORDER BY avg_rating DESC)")
     c1, c2 = st.columns([1,3])
     with c1:
         year_filter = st.selectbox("Filter Year", [None, 2022, 2023, 2024], format_func=lambda x: "All Years" if x is None else str(x))
@@ -82,6 +87,11 @@ def render():
         st.info(f"Top performers data not available yet: {err}")
     elif top:
         df_top = pd.DataFrame(top)
+        
+        # Cast SQL Decimals to floats
+        df_top["avg_rating"] = df_top["avg_rating"].astype(float)
+        df_top["monthly_income"] = df_top["monthly_income"].astype(float)
+
         with c2:
             fig = px.bar(df_top, x="full_name", y="avg_rating",
                          color="department_name", text="dept_rank",
@@ -101,12 +111,18 @@ def render():
 
     # ── Attrition Risk ────────────────────────────────────────
     st.subheader("⚠️ Attrition Risk Analysis")
-    st.caption("SQL: `NTILE(4) OVER (ORDER BY risk_score DESC)` — scored by satisfaction + overtime + tenure")
+    st.caption("SQL: NTILE(4) OVER (ORDER BY risk_score DESC) — scored by satisfaction + overtime + tenure")
     risk, err = _try_load(mgr.get_attrition_risk)
     if err:
         st.info(f"Attrition risk data not available yet: {err}")
     elif risk:
         df_risk = pd.DataFrame(risk)
+        
+        # Explicitly cast SQL Decimal values to native Python floats for Plotly
+        df_risk["risk_score"] = df_risk["risk_score"].astype(float)
+        df_risk["avg_satisfaction"] = df_risk["avg_satisfaction"].astype(float)
+        df_risk["avg_wlb"] = df_risk["avg_wlb"].astype(float)
+
         color_map = {"High Risk":"#ef4444","Medium Risk":"#f97316","Low Risk":"#22c55e","Very Low Risk":"#86efac"}
         df_risk["risk_category"] = df_risk["risk_quartile"].map(
             {1:"High Risk",2:"Medium Risk",3:"Low Risk",4:"Very Low Risk"})
@@ -141,12 +157,16 @@ def render():
 
     # ── Salary Distribution ───────────────────────────────────
     st.subheader("💰 Salary Distribution by Department")
-    st.caption("SQL: `PERCENT_RANK() OVER (PARTITION BY department_name ORDER BY monthly_income)`")
+    st.caption("SQL: PERCENT_RANK() OVER (PARTITION BY department_name ORDER BY monthly_income)")
     sal, err = _try_load(mgr.get_salary_distribution)
     if err:
         st.info(f"Salary distribution not available yet: {err}")
     elif sal:
         df_sal = pd.DataFrame(sal)
+        
+        # Cast SQL Decimals to floats
+        df_sal["monthly_income"] = df_sal["monthly_income"].astype(float)
+
         fig = px.box(df_sal, x="department_name", y="monthly_income",
                      color="department_name",
                      title="Salary Distribution per Department",
@@ -158,7 +178,7 @@ def render():
 
     # ── SCD2 History Viewer ───────────────────────────────────
     st.subheader("🕰️ Employee Career History (SCD Type 2)")
-    st.caption("View all historical versions of an employee from `hr_olap.Dim_Employee`")
+    st.caption("View all historical versions of an employee from hr_olap.Dim_Employee")
     emp_id_h = st.number_input("Employee ID", min_value=1, step=1, key="hist_id")
     if st.button("🔍 View Career History"):
         hist, err = _try_load(lambda: mgr.get_employee_history(int(emp_id_h)))

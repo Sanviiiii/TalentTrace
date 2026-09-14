@@ -10,6 +10,7 @@ __pycache__/
 # Environment / Secrets
 .env
 
+
 # Large synthesized data files (generated locally, not pushed)
 data/employees_synthesized.csv
 data/employees_historical.csv
