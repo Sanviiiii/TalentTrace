@@ -1,17 +1,16 @@
-"""streamlit_app/pages/onboard.py — Employee onboarding + SCD2 updates"""
+"""streamlit_app/pages/onboard.py"""
 import streamlit as st
 from datetime import date
 from backend.managers import EmployeeManager, DepartmentManager
 from backend.models import Employee
 
 def render():
-    st.title("➕ Employee Onboarding")
+    st.title("Employee Onboarding")
     st.markdown("Add a new employee or update an existing one. Department/salary changes automatically trigger **SCD Type 2** updates in the Data Warehouse.")
     st.markdown("---")
 
-    tab1, tab2, tab3 = st.tabs(["➕ New Employee", "🔄 Update Department (SCD2)", "💰 Update Salary (SCD2)"])
+    tab1, tab2, tab3 = st.tabs(["New Employee", "Update Department (SCD2)", "Update Salary (SCD2)"])
 
-    # ── TAB 1: Add new employee ──────────────────────────────
     with tab1:
         st.subheader("New Employee Details")
         dept_mgr  = DepartmentManager()
@@ -42,78 +41,55 @@ def render():
             with c2: overtime = st.selectbox("Over Time", ["No","Yes"])
             with c3: distance = st.number_input("Distance from Home (km)", 1, 100, 10)
 
-            submitted = st.form_submit_button("➕ Onboard Employee", use_container_width=True, type="primary")
+            submitted = st.form_submit_button("Onboard Employee", use_container_width=True, type="primary")
             if submitted:
                 if not all([first_name, last_name, email, job_role]):
                     st.error("Please fill all required (*) fields.")
                 else:
                     try:
                         emp = Employee(
-                            first_name=first_name, last_name=last_name,
-                            email=email, phone=phone, gender=gender, age=int(age),
-                            hire_date=hire_date, department_id=dept_opts[dept_name],
-                            job_role=job_role, job_level=int(job_level),
-                            monthly_income=float(monthly_income),
-                            education=int(education), education_field=edu_field,
-                            marital_status=marital, business_travel=travel,
-                            distance_from_home=int(distance), over_time=overtime,
+                            first_name=first_name, last_name=last_name, email=email, phone=phone, gender=gender, age=int(age),
+                            hire_date=hire_date, department_id=dept_opts[dept_name], job_role=job_role, job_level=int(job_level),
+                            monthly_income=float(monthly_income), education=int(education), education_field=edu_field,
+                            marital_status=marital, business_travel=travel, distance_from_home=int(distance), over_time=overtime,
                         )
                         errors = emp.validate()
                         if errors:
                             for e in errors: st.error(e)
                         else:
-                            mgr    = EmployeeManager()
+                            mgr = EmployeeManager()
                             emp_id = mgr.add(emp)
-                            st.success(f"✅ Employee '{first_name} {last_name}' onboarded! ID: **{emp_id}**")
-                            st.info("🏛️ SCD Type 2 record created in `hr_olap.Dim_Employee` (is_current=1)")
-                    except ValueError as e:
-                        st.error(str(e))
+                            st.success(f"Employee '{first_name} {last_name}' onboarded! ID: **{emp_id}**")
                     except Exception as e:
-                        st.error(f"Database error: {e}")
+                        st.error(f"Error: {e}")
 
-    # ── TAB 2: Update Department (SCD2) ──────────────────────
     with tab2:
         st.subheader("Change Employee Department")
-        st.markdown("""
-        <div class='warning-box'>
-        ⚠️ <b>SCD Type 2 will be triggered:</b> The old department record will be 
-        closed (<code>end_date = today, is_current = 0</code>) and a new record 
-        will be opened with the updated department.
-        </div>""", unsafe_allow_html=True)
-
+        st.markdown("<div class='warning-box'><b>SCD Type 2 will be triggered:</b> The old department record will be closed and a new record opened.</div>", unsafe_allow_html=True)
         with st.form("update_dept_form"):
             emp_id_input = st.number_input("Employee ID*", min_value=1, step=1)
             new_dept     = st.selectbox("New Department*", list(dept_opts.keys()))
-            reason       = st.text_input("Reason for transfer", placeholder="e.g. Promotion, Restructuring")
-            submitted2   = st.form_submit_button("🔄 Update Department + Trigger SCD2", use_container_width=True, type="primary")
+            reason       = st.text_input("Reason for transfer")
+            submitted2   = st.form_submit_button("Update Department", use_container_width=True, type="primary")
             if submitted2:
                 try:
                     mgr = EmployeeManager()
                     mgr.update_department(int(emp_id_input), dept_opts[new_dept], reason)
-                    st.success(f"✅ Department updated for Employee {emp_id_input} → **{new_dept}**")
-                    st.markdown("""
-                    <div class='success-box'>
-                    🏛️ <b>SCD Type 2 complete:</b><br>
-                    • Old row: <code>end_date = today, is_current = 0</code><br>
-                    • New row: <code>start_date = today, is_current = 1</code>
-                    </div>""", unsafe_allow_html=True)
+                    st.markdown(f"<div class='success-box'>Department updated for Employee {emp_id_input} → <b>{new_dept}</b></div>", unsafe_allow_html=True)
                 except Exception as e:
                     st.error(str(e))
 
-    # ── TAB 3: Update Salary (SCD2) ──────────────────────────
     with tab3:
         st.subheader("Update Employee Salary")
-        st.markdown("Salary changes >5% automatically trigger a new SCD Type 2 version in the Data Warehouse.")
         with st.form("update_salary_form"):
             emp_id_s   = st.number_input("Employee ID*", min_value=1, step=1, key="sal_id")
-            new_salary = st.number_input("New Monthly Income (₹)*", min_value=1000, max_value=20000, value=8000, step=500)
-            reason_s   = st.text_input("Reason", placeholder="e.g. Annual hike, Promotion")
-            submitted3 = st.form_submit_button("💰 Update Salary", use_container_width=True, type="primary")
+            new_salary = st.number_input("New Monthly Income (₹)*", min_value=1000, value=8000, step=500)
+            reason_s   = st.text_input("Reason")
+            submitted3 = st.form_submit_button("Update Salary", use_container_width=True, type="primary")
             if submitted3:
                 try:
                     mgr = EmployeeManager()
                     mgr.update_salary(int(emp_id_s), float(new_salary), reason_s)
-                    st.success(f"✅ Salary updated for Employee {emp_id_s} → ₹{new_salary:,}/month")
-                    st.info("Logged to `Salary_History`. SCD2 triggered if change > 5%.")
+                    st.markdown(f"<div class='success-box'>Salary updated for Employee {emp_id_s} → ₹{new_salary:,}/month</div>", unsafe_allow_html=True)
                 except Exception as e:
                     st.error(str(e))

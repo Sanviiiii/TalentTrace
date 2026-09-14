@@ -1,16 +1,15 @@
-"""streamlit_app/pages/reviews.py — Performance review submission"""
+"""streamlit_app/pages/reviews.py"""
 import streamlit as st
 import pandas as pd
 from datetime import date
-from backend.managers import ReviewManager, EmployeeManager
+from backend.managers import ReviewManager
 from backend.models import Review
 
 def render():
-    st.title("📝 Performance Reviews")
+    st.title("Performance Reviews")
     st.markdown("---")
-    tab1, tab2 = st.tabs(["➕ Submit Review", "📋 View Reviews"])
+    tab1, tab2 = st.tabs(["Submit Review", "View Reviews"])
 
-    # ── TAB 1: Submit Review ──────────────────────────────────
     with tab1:
         st.subheader("Submit a Performance Review")
         st.info("Ratings are on a scale of 1–4: 1=Poor, 2=Below Average, 3=Excellent, 4=Outstanding")
@@ -31,26 +30,19 @@ def render():
                 involvement = st.slider("Job Involvement", 1, 4, 3)
             comments = st.text_area("Comments / Notes", height=100)
 
-            # Live preview of overall score
             overall = round((perf_rating+job_sat+env_sat+rel_sat+wlb+involvement)/6, 2)
             label   = {1:"Poor",2:"Below Average",3:"Excellent",4:"Outstanding"}.get(perf_rating,"—")
             st.markdown(f"**Predicted Overall Score: `{overall}/4.0`  |  Rating: `{label}`**")
 
-            submitted = st.form_submit_button("📝 Submit Review", use_container_width=True, type="primary")
+            submitted = st.form_submit_button("Submit Review", use_container_width=True, type="primary")
             if submitted:
                 try:
                     review = Review(
-                        employee_id=int(emp_id),
-                        review_date=review_date,
-                        review_year=int(review_year),
-                        review_quarter=int(quarter),
-                        performance_rating=int(perf_rating),
-                        job_satisfaction=int(job_sat),
-                        environment_satisfaction=int(env_sat),
-                        relationship_satisfaction=int(rel_sat),
-                        work_life_balance=int(wlb),
-                        job_involvement=int(involvement),
-                        reviewer_id=int(reviewer_id) if reviewer_id > 0 else None,
+                        employee_id=int(emp_id), review_date=review_date, review_year=int(review_year),
+                        review_quarter=int(quarter), performance_rating=int(perf_rating),
+                        job_satisfaction=int(job_sat), environment_satisfaction=int(env_sat),
+                        relationship_satisfaction=int(rel_sat), work_life_balance=int(wlb),
+                        job_involvement=int(involvement), reviewer_id=int(reviewer_id) if reviewer_id > 0 else None,
                         comments=comments
                     )
                     errors = review.validate()
@@ -59,35 +51,24 @@ def render():
                     else:
                         mgr = ReviewManager()
                         rid = mgr.submit(review)
-                        st.success(f"✅ Review submitted! Review ID: **{rid}** | Score: **{overall}/4.0**")
+                        st.markdown(f"<div class='success-box'>Review submitted! ID: <b>{rid}</b> | Score: <b>{overall}/4.0</b></div>", unsafe_allow_html=True)
                 except Exception as e:
                     st.error(str(e))
 
-    # ── TAB 2: View Reviews ───────────────────────────────────
     with tab2:
         st.subheader("Employee Review History")
-        emp_id_v = st.number_input("Enter Employee ID to view reviews", min_value=1, step=1, key="view_emp")
-        if st.button("🔍 Load Reviews"):
+        emp_id_v = st.number_input("Enter Employee ID", min_value=1, step=1, key="view_emp")
+        if st.button("Load Reviews"):
             try:
                 mgr     = ReviewManager()
                 reviews = mgr.get_by_employee(int(emp_id_v))
                 if reviews:
                     df = pd.DataFrame(reviews)
-                    st.dataframe(df[["review_id","review_year","review_quarter","performance_rating",
-                                     "job_satisfaction","work_life_balance","environment_satisfaction",
-                                     "review_date","reviewer_name"]].rename(columns={
-                        "performance_rating":"Perf","job_satisfaction":"Job Sat",
-                        "work_life_balance":"WLB","environment_satisfaction":"Env Sat"
-                    }), use_container_width=True, hide_index=True)
-
+                    st.dataframe(df, use_container_width=True, hide_index=True)
                     import plotly.express as px
-                    fig = px.line(df.sort_values("review_year"),
-                        x="review_year", y="performance_rating",
-                        title=f"Performance Trend — Employee {emp_id_v}",
-                        markers=True, color_discrete_sequence=["#3b82f6"])
-                    fig.update_layout(yaxis=dict(range=[0,5]), template="plotly_white")
-                    st.plotly_chart(fig, use_container_width=True)
+                    fig = px.line(df.sort_values("review_year"), x="review_year", y="performance_rating", markers=True)
+                    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
                 else:
-                    st.info(f"No reviews found for Employee {emp_id_v}")
+                    st.info("No reviews found.")
             except Exception as e:
                 st.error(str(e))
