@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="DFHv7bs8WSd4KGk-j9x6">
+    <mxGraphModel dx="1290" dy="828" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="dept" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" value="Department&#xa;------------------&#xa;DepartmentID (PK)&#xa;DepartmentName" vertex="1">
+          <mxGeometry height="120" width="220" x="50" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="emp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="Employee&#xa;------------------&#xa;EmployeeID (PK)&#xa;FirstName&#xa;LastName&#xa;Gender&#xa;Age&#xa;DepartmentID (FK)&#xa;JobRoleID (FK)&#xa;ManagerID&#xa;HireDate&#xa;Salary&#xa;PerformanceRating&#xa;Attrition" vertex="1">
+          <mxGeometry height="280" width="260" x="350" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="job" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" value="JobRole&#xa;------------------&#xa;JobRoleID (PK)&#xa;JobRoleName" vertex="1">
+          <mxGeometry height="120" width="220" x="720" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="att" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" value="Attendance&#xa;------------------&#xa;AttendanceID (PK)&#xa;EmployeeID (FK)&#xa;AttendanceDate&#xa;HoursWorked" vertex="1">
+          <mxGeometry height="150" width="240" x="50" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="train" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" value="Training&#xa;------------------&#xa;TrainingID (PK)&#xa;EmployeeID (FK)&#xa;TrainingName&#xa;TrainingHours&#xa;CompletionStatus" vertex="1">
+          <mxGeometry height="170" width="240" x="370" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="perf" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" value="Performance&#xa;------------------&#xa;PerformanceID (PK)&#xa;EmployeeID (FK)&#xa;ReviewDate&#xa;PerformanceRating" vertex="1">
+          <mxGeometry height="150" width="240" x="690" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="dept" style="endArrow=none;html=1;" target="emp" value="1:M">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="job" style="endArrow=none;html=1;" target="emp" value="1:M">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="att" value="1:M">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="train" value="1:M">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="perf" value="1:M">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
