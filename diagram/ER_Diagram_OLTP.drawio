@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="DFHv7bs8WSd4KGk-j9x6">
-    <mxGraphModel dx="1290" dy="828" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1032" dy="663" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -22,19 +22,19 @@
         <mxCell id="perf" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" value="Performance&#xa;------------------&#xa;PerformanceID (PK)&#xa;EmployeeID (FK)&#xa;ReviewDate&#xa;PerformanceRating" vertex="1">
           <mxGeometry height="150" width="240" x="690" y="520" as="geometry" />
         </mxCell>
-        <mxCell id="e1" edge="1" parent="1" source="dept" style="endArrow=none;html=1;" target="emp" value="1:M">
+        <mxCell id="e1" edge="1" parent="1" source="dept" style="endArrow=none;html=1;" target="emp" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" edge="1" parent="1" source="job" style="endArrow=none;html=1;" target="emp" value="1:M">
+        <mxCell id="e2" edge="1" parent="1" source="job" style="endArrow=none;html=1;" target="emp" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="att" value="1:M">
+        <mxCell id="e3" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="att" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e4" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="train" value="1:M">
+        <mxCell id="e4" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="train" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e5" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="perf" value="1:M">
+        <mxCell id="e5" edge="1" parent="1" source="emp" style="endArrow=none;html=1;" target="perf" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
