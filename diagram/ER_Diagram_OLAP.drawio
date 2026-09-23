@@ -19,16 +19,16 @@
         <mxCell id="date" parent="1" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="DimDate&#xa;------------------&#xa;DateID (PK)&#xa;Date&#xa;Month&#xa;Quarter&#xa;Year" vertex="1">
           <mxGeometry height="130" width="240" x="400" y="550" as="geometry" />
         </mxCell>
-        <mxCell id="e1" edge="1" parent="1" source="emp" target="fact">
+        <mxCell id="e1" edge="1" parent="1" source="emp" style="shape=link;" target="fact">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" edge="1" parent="1" source="dept" target="fact">
+        <mxCell id="e2" edge="1" parent="1" source="dept" style="shape=link;" target="fact">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" edge="1" parent="1" source="job" target="fact">
+        <mxCell id="e3" edge="1" parent="1" source="job" style="shape=link;" target="fact">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e4" edge="1" parent="1" source="date" target="fact">
+        <mxCell id="e4" edge="1" parent="1" source="date" style="shape=link;" target="fact">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
