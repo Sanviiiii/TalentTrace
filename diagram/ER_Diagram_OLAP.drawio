@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="_EtwsxleFNFEHylXbMFl">
+    <mxGraphModel dx="1032" dy="663" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="fact" parent="1" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;" value="FactEmployeeAnalytics&#xa;----------------------&#xa;EmployeeID (FK)&#xa;DepartmentID (FK)&#xa;JobRoleID (FK)&#xa;DateID (FK)&#xa;&#xa;Salary&#xa;PerformanceRating&#xa;TrainingHours&#xa;HoursWorked&#xa;AttritionCount" vertex="1">
+          <mxGeometry height="220" width="280" x="380" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="emp" parent="1" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="DimEmployee&#xa;------------------&#xa;EmployeeID (PK)&#xa;EmployeeName&#xa;Gender&#xa;Age&#xa;Education&#xa;MaritalStatus" vertex="1">
+          <mxGeometry height="150" width="240" x="400" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dept" parent="1" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="DimDepartment&#xa;------------------&#xa;DepartmentID (PK)&#xa;DepartmentName" vertex="1">
+          <mxGeometry height="100" width="220" x="60" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="job" parent="1" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="DimJobRole&#xa;------------------&#xa;JobRoleID (PK)&#xa;JobRoleName" vertex="1">
+          <mxGeometry height="100" width="220" x="760" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="date" parent="1" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="DimDate&#xa;------------------&#xa;DateID (PK)&#xa;Date&#xa;Month&#xa;Quarter&#xa;Year" vertex="1">
+          <mxGeometry height="130" width="240" x="400" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="emp" style="shape=link;" target="fact">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="dept" style="shape=link;" target="fact">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="job" style="shape=link;" target="fact">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="date" style="shape=link;" target="fact">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
