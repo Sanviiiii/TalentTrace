@@ -9,7 +9,7 @@ def render():
     st.markdown("Add a new employee or update an existing one. Department/salary changes automatically trigger **SCD Type 2** updates in the Data Warehouse.")
     st.markdown("---")
 
-    tab1, tab2, tab3 = st.tabs(["New Employee", "Update Department (SCD2)", "Update Salary (SCD2)"])
+    tab1, tab2, tab3 = st.tabs(["New Employee", "Update Department", "Update Salary"])
 
     with tab1:
         st.subheader("New Employee Details")

@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS Departments (
 -- ────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS Employees (
     employee_id             INT             AUTO_INCREMENT PRIMARY KEY,
-    first_name              VARCHAR(100)    NOT NULL,
-    last_name               VARCHAR(100)    NOT NULL,
+    first_name              VARCHAR(100)    NOT NULL CHECK (first_name REGEXP '^[A-Za-z]+$'),
+    last_name               VARCHAR(100)    NOT NULL CHECK (last_name REGEXP '^[A-Za-z]+$'),
     email                   VARCHAR(150)    NOT NULL UNIQUE,
     phone                   VARCHAR(20),
     gender                  ENUM('Male','Female','Other'),
@@ -181,4 +181,24 @@ SELECT 'hr_oltp schema created successfully!' AS status;
  use hr_oltp;
  show tables;
  
+ select * from Employees
+ limit 5;
+ 
  CALL sp_populate_dim_date();
+ 
+ -- Alter table
+ -- 1. Drop the violating rows
+DELETE FROM Employees 
+WHERE first_name REGEXP '[0-9]' 
+   OR last_name REGEXP '[0-9]';
+
+-- 2. Add the constraints
+-- Drop the violating rows
+DELETE FROM Employees
+WHERE first_name REGEXP '[0-9]'OR last_name REGEXP '[0-9]';
+
+ALTER TABLE Employees
+ADD CONSTRAINT chk_first_name_letters
+CHECK (first_name REGEXP '^[A-Za-z]+$'),
+ADD CONSTRAINT chk_last_name_letters
+CHECK (last_name REGEXP '^[A-Za-z]+$');
